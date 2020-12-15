@@ -58,6 +58,7 @@
 - [#10043](https://github.com/MetaMask/metamask-extension/pull/10043): Improve swaps maximum gas estimation
 - [#10069](https://github.com/MetaMask/metamask-extension/pull/10069): Fetch swap quote refresh time from API
 - [#10040](https://github.com/MetaMask/metamask-extension/pull/10040): Disable console in contentscript to reduce noise
+- [#10073](https://github.com/MetaMask/metamask-extension/pull/10073): Updated es and es-419 translations
 
 ## 8.1.8 Wed Dec 09 2020
 
