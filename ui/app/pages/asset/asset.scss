@@ -32,7 +32,8 @@
   }
 }
 
-.token-options {
+.token-options,
+.native-asset-options {
   &__button {
     font-size: $font-size-paragraph;
     color: $Black-100;
