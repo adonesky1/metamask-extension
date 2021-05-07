@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { getAccountLink } from '@metamask/etherscan-link';
 import Modal from '../../modal';
 import { addressSummary } from '../../../../helpers/utils/util';
 import Identicon from '../../../ui/identicon';
-import getAccountLink from '../../../../helpers/utils/account-link';
 
 export default class ConfirmRemoveAccount extends Component {
   static propTypes = {
@@ -16,6 +16,7 @@ export default class ConfirmRemoveAccount extends Component {
 
   static contextTypes = {
     t: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   handleRemove = () => {
@@ -29,7 +30,7 @@ export default class ConfirmRemoveAccount extends Component {
   };
 
   renderSelectedAccount() {
-    const { identity } = this.props;
+    const { identity, rpcPrefs } = this.props;
     return (
       <div className="confirm-remove-account__account">
         <div className="confirm-remove-account__account__identicon">
@@ -50,11 +51,25 @@ export default class ConfirmRemoveAccount extends Component {
         <div className="confirm-remove-account__account__link">
           <a
             className=""
-            href={getAccountLink(
-              identity.address,
-              this.props.chainId,
-              this.props.rpcPrefs,
-            )}
+            onClick={() => {
+              if (rpcPrefs.blockExplorerUrl) {
+                this.context.trackEvent({
+                  category: 'Navigation',
+                  event: 'Clicked Custom Block Explorer Link',
+                  properties: {
+                    custom_network_url: rpcPrefs.blockExplorerUrl,
+                    link_type: 'Account Tracker',
+                  },
+                });
+              }
+              global.platform.openTab({
+                url: getAccountLink(
+                  identity.address,
+                  this.props.chainId,
+                  rpcPrefs,
+                ),
+              });
+            }}
             target="_blank"
             rel="noopener noreferrer"
             title={this.context.t('etherscanView')}
