@@ -32,7 +32,7 @@ export default function CurrencyDisplay({
   });
   return (
     <>
-      {title && parts ? (
+      {parts ? (
         <div
           className={classnames('currency-display-component', className)}
           data-testid={dataTestId}

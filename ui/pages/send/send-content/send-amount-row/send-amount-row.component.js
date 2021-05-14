@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 import SendRowWrapper from '../send-row-wrapper';
-import UserPreferencedCurrencyInput from '../../../../components/app/user-preferenced-currency-input';
-// import UserPreferencedTokenInput from '../../../../components/app/user-preferenced-token-input';
-import TokenInput from '../../../../components/ui/token-input'
+import CurrencyInput from '../../../../components/ui/currency-input';
+import TokenInput from '../../../../components/ui/token-input';
 
 import AmountMaxButton from './amount-max-button';
 
@@ -111,7 +110,7 @@ export default class SendAmountRow extends Component {
         value={amount}
       />
     ) : (
-      <UserPreferencedCurrencyInput
+      <CurrencyInput
         error={inError}
         onChange={this.handleChange}
         value={amount}

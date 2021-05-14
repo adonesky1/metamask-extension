@@ -5,6 +5,7 @@ import {
   getCurrentCurrency,
   getNativeCurrency,
   getConversionRate,
+  getPreferences,
 } from '../selectors';
 import { useCurrencyDisplay } from './useCurrencyDisplay';
 
@@ -115,6 +116,10 @@ describe('useCurrencyDisplay', () => {
           return 'ETH';
         } else if (selector === getConversionRate) {
           return 280.45;
+        } else if (selector === getPreferences) {
+          return {
+            useNativeCurrencyAsPrimaryCurrency: true,
+          };
         }
         return undefined;
       });
