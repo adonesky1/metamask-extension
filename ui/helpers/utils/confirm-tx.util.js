@@ -67,6 +67,7 @@ export function getValueFromWeiHex({
   conversionRate,
   numberOfDecimals,
   toDenomination,
+  invertConversionRate,
 }) {
   return conversionUtil(value, {
     fromNumericBase: 'hex',
@@ -77,6 +78,7 @@ export function getValueFromWeiHex({
     fromDenomination: 'WEI',
     toDenomination,
     conversionRate,
+    invertConversionRate,
   });
 }
 
@@ -106,7 +108,7 @@ export function formatCurrency(value, currencyCode) {
         code: upperCaseCurrencyCode,
         style: 'currency',
       })
-    : value;
+    : `${value} ${upperCaseCurrencyCode}`;
 }
 
 export function convertTokenToFiat({

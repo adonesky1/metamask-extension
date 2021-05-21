@@ -35,6 +35,7 @@ import SendIcon from '../../ui/icon/overview-send-icon.component';
 import { setSwapsFromToken } from '../../../ducks/swaps/swaps';
 import IconButton from '../../ui/icon-button';
 import WalletOverview from './wallet-overview';
+import { useCurrency } from '../../../hooks/useCurrency'
 
 const EthOverview = ({ className }) => {
   const dispatch = useDispatch();
@@ -72,6 +73,8 @@ const EthOverview = ({ className }) => {
   });
   const defaultSwapsToken = useSelector(getSwapsDefaultToken);
 
+  const { primary, secondary } = useCurrency({ inputValue: balance });
+
   return (
     <WalletOverview
       balance={
@@ -87,8 +90,10 @@ const EthOverview = ({ className }) => {
                   'eth-overview__cached-balance': balanceIsCached,
                 })}
                 data-testid="eth-overview__primary-currency"
-                value={balance}
-                type={PRIMARY}
+                currency={primary.currency}
+                // value={balance}
+                // type={PRIMARY}
+                displayValue={primary.value}
                 ethNumberOfDecimals={4}
                 hideTitle
               />
@@ -103,8 +108,10 @@ const EthOverview = ({ className }) => {
                   'eth-overview__secondary-balance': !balanceIsCached,
                 })}
                 data-testid="eth-overview__secondary-currency"
-                value={balance}
-                type={SECONDARY}
+                // value={balance}
+                // type={SECONDARY}
+                currency={secondary.currency}
+                displayValue={secondary.value}
                 ethNumberOfDecimals={4}
                 hideTitle
               />
