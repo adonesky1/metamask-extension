@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { ETH } from '../../../helpers/constants/common';
 import { getIsMainnet, getPreferences } from '../../../selectors';
-import CurrencyInput from './currency-input.component';
+import { CurrencyInput } from './currency-input.component';
 
 const mapStateToProps = (state) => {
   const {
