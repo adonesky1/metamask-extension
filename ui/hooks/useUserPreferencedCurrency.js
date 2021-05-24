@@ -38,7 +38,7 @@ export function useUserPreferencedCurrency(type, opts = {}) {
   const currentCurrency = useSelector(getCurrentCurrency);
   const { useNativeCurrencyAsPrimaryCurrency } = useSelector(getPreferences);
 
-  let currency, numberOfDecimals, requiresConversion = false;
+  let currency, numberOfDecimals;
   if (
     (type === PRIMARY && useNativeCurrencyAsPrimaryCurrency) ||
     (type === SECONDARY && !useNativeCurrencyAsPrimaryCurrency)
@@ -55,5 +55,5 @@ export function useUserPreferencedCurrency(type, opts = {}) {
     numberOfDecimals = opts.numberOfDecimals || opts.fiatNumberOfDecimals || 2;
   }
 
-  return { currency, numberOfDecimals, requiresConversion };
+  return { currency, numberOfDecimals };
 }
