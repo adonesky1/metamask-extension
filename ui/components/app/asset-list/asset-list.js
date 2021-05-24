@@ -12,10 +12,10 @@ import { useUserPreferencedCurrency } from '../../../hooks/useUserPreferencedCur
 import {
   getCurrentAccountWithSendEtherInfo,
   getNativeCurrency,
-  getShouldShowFiat,
   getNativeCurrencyImage,
 } from '../../../selectors';
 import { useCurrencyDisplay } from '../../../hooks/useCurrencyDisplay';
+import { useCurrency } from '../../../hooks/useCurrency';
 
 const AssetList = ({ onClickAsset }) => {
   const history = useHistory();
@@ -23,7 +23,6 @@ const AssetList = ({ onClickAsset }) => {
     (state) => getCurrentAccountWithSendEtherInfo(state).balance,
   );
   const nativeCurrency = useSelector(getNativeCurrency);
-  const showFiat = useSelector(getShouldShowFiat);
   const selectTokenEvent = useMetricEvent({
     eventOpts: {
       category: 'Navigation',
@@ -39,30 +38,7 @@ const AssetList = ({ onClickAsset }) => {
     },
   });
 
-  const {
-    currency: primaryCurrency,
-    numberOfDecimals: primaryNumberOfDecimals,
-  } = useUserPreferencedCurrency(PRIMARY, { ethNumberOfDecimals: 4 });
-  const {
-    currency: secondaryCurrency,
-    numberOfDecimals: secondaryNumberOfDecimals,
-  } = useUserPreferencedCurrency(SECONDARY, { ethNumberOfDecimals: 4 });
-
-  const [, primaryCurrencyProperties] = useCurrencyDisplay(
-    selectedAccountBalance,
-    {
-      numberOfDecimals: primaryNumberOfDecimals,
-      currency: primaryCurrency,
-    },
-  );
-
-  const [secondaryCurrencyDisplay] = useCurrencyDisplay(
-    selectedAccountBalance,
-    {
-      numberOfDecimals: secondaryNumberOfDecimals,
-      currency: secondaryCurrency,
-    },
-  );
+  const { primary, secondary } = useCurrency( { inputValue: selectedAccountBalance } )
 
   const primaryTokenImage = useSelector(getNativeCurrencyImage);
 
@@ -71,9 +47,10 @@ const AssetList = ({ onClickAsset }) => {
       <AssetListItem
         onClick={() => onClickAsset(nativeCurrency)}
         data-testid="wallet-balance"
-        primary={primaryCurrencyProperties.value}
-        tokenSymbol={primaryCurrencyProperties.suffix}
-        secondary={showFiat ? secondaryCurrencyDisplay : undefined}
+        primary={primary.formatted}
+        tokenSymbol={primary.currency}
+        secondary={secondary.isHidden ? undefined : secondary.formatted}
+        secondaryTokenSymbol={secondary.currency}
         tokenImage={primaryTokenImage}
         identiconBorder
       />

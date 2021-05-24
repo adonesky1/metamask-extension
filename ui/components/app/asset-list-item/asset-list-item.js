@@ -26,6 +26,7 @@ const AssetListItem = ({
   warning,
   primary,
   secondary,
+  secondaryTokenSymbol,
   identiconBorder,
 }) => {
   const t = useI18nContext();
@@ -98,7 +99,7 @@ const AssetListItem = ({
         <button
           className="asset-list-item__token-button"
           onClick={onClick}
-          title={`${primary} ${tokenSymbol}`}
+          title={primary}
         >
           <h2>
             <span className="asset-list-item__token-value">{primary}</span>
@@ -107,7 +108,7 @@ const AssetListItem = ({
         </button>
       }
       titleIcon={titleIcon}
-      subtitle={<h3 title={secondary}>{secondary}</h3>}
+      subtitle={secondary && (<h3 title={secondary}>{secondary} {secondaryTokenSymbol}</h3>)}
       onClick={onClick}
       icon={
         <Identicon
@@ -115,7 +116,7 @@ const AssetListItem = ({
           diameter={32}
           address={tokenAddress}
           image={tokenImage}
-          alt={`${primary} ${tokenSymbol}`}
+          alt={primary}
           imageBorder={identiconBorder}
         />
       }

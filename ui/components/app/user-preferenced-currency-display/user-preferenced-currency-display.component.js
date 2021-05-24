@@ -12,13 +12,15 @@ export default function UserPreferencedCurrencyDisplay({
   'numberOfDecimals': propsNumberOfDecimals,
   showEthLogo,
   type,
+  displayValue,
+  currency,
   ...restProps
 }) {
-  const { currency, numberOfDecimals } = useUserPreferencedCurrency(type, {
-    ethNumberOfDecimals,
-    fiatNumberOfDecimals,
-    numberOfDecimals: propsNumberOfDecimals,
-  });
+  // const { currency, numberOfDecimals } = useUserPreferencedCurrency(type, {
+  //   ethNumberOfDecimals,
+  //   fiatNumberOfDecimals,
+  //   numberOfDecimals: propsNumberOfDecimals,
+  // });
   const prefixComponent = useMemo(() => {
     return (
       currency === ETH &&
@@ -31,8 +33,9 @@ export default function UserPreferencedCurrencyDisplay({
       {...restProps}
       currency={currency}
       data-testid={dataTestId}
-      numberOfDecimals={numberOfDecimals}
+      // numberOfDecimals={numberOfDecimals}
       prefixComponent={prefixComponent}
+      displayValue={displayValue}
     />
   );
 }
