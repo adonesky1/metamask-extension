@@ -2,13 +2,20 @@ import { strict as assert } from 'assert';
 import { ObservableStore } from '@metamask/obs-store';
 import { ethErrors } from 'eth-rpc-errors';
 import { normalize as normalizeAddress } from 'eth-sig-util';
-import ethers from 'ethers';
+import { ethers } from 'ethers';
 import log from 'loglevel';
+import abiERC721 from 'human-standard-collectible-abi';
+import contractsMap from '@metamask/contract-metadata';
 import { LISTED_CONTRACT_ADDRESSES } from '../../../shared/constants/tokens';
 import { NETWORK_TYPE_TO_ID_MAP } from '../../../shared/constants/network';
 import { isPrefixedFormattedHexString } from '../../../shared/modules/network.utils';
-import { isValidHexAddress } from '../../../shared/modules/hexstring-utils';
+import {
+  isValidHexAddress,
+  toChecksumHexAddress,
+} from '../../../shared/modules/hexstring-utils';
 import { NETWORK_EVENTS } from './network';
+
+const ERC721METADATA_INTERFACE_ID = '0x5b5e139f';
 
 export default class PreferencesController {
   /**
@@ -73,6 +80,8 @@ export default class PreferencesController {
     };
 
     this.network = opts.network;
+    const { type, rpcUrl } = this.network.getProviderConfig();
+    this.provider = ethers.getDefaultProvider(rpcUrl || type);
     this.store = new ObservableStore(initState);
     this.store.setMaxListeners(12);
     this.openPopup = opts.openPopup;
@@ -392,6 +401,21 @@ export default class PreferencesController {
       return token.address === address;
     });
     const previousIndex = tokens.indexOf(previousEntry);
+    const checksumAddress = toChecksumHexAddress(newEntry.address);
+
+    // add isERC721 flag:
+    let isERC721 = false;
+    // if this token is already in our contract metadata map we don't need
+    // to check against the contract
+    if (
+      contractsMap[checksumAddress] &&
+      contractsMap[checksumAddress].erc721 === true
+    ) {
+      isERC721 = true;
+    } else {
+      isERC721 = await this._detectIsERC721(newEntry.address);
+    }
+    newEntry.isERC721 = isERC721;
 
     if (previousEntry) {
       tokens[previousIndex] = newEntry;
@@ -708,6 +732,8 @@ export default class PreferencesController {
   _subscribeToNetworkDidChange() {
     this.network.on(NETWORK_EVENTS.NETWORK_DID_CHANGE, () => {
       const { tokens, hiddenTokens } = this._getTokenRelatedStates();
+      const { type, rpcUrl } = this.network.getProviderConfig();
+      this.provider = ethers.getDefaultProvider(rpcUrl || type);
       this._updateAccountTokens(tokens, this.getAssetImages(), hiddenTokens);
     });
   }
@@ -761,6 +787,27 @@ export default class PreferencesController {
       accountHiddenTokens,
       hiddenTokens,
     });
+  }
+
+  /**
+   * Detects whether a token is ERC-721.
+   *
+   * @param {string} tokensAddress - the token contract address.
+   *
+   */
+  async _detectIsERC721(tokenAddress) {
+    const tokenContract = await new ethers.Contract(
+      tokenAddress,
+      abiERC721,
+      this.provider,
+    );
+    const isERC721 = await tokenContract
+      .supportsInterface(ERC721METADATA_INTERFACE_ID)
+      .catch((error) => {
+        log.debug(error);
+        return false;
+      });
+    return isERC721;
   }
 
   /**
