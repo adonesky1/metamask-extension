@@ -20,6 +20,7 @@ describe('preferences controller', function () {
     network = {
       getCurrentChainId: () => currentChainId,
       on: sinon.spy(),
+      getProviderConfig: () => ({ type: 'mainnet' }),
     };
     preferencesController = new PreferencesController({
       migrateAddressBookState,
@@ -291,7 +292,12 @@ describe('preferences controller', function () {
       assert.equal(tokens.length, 1, 'one token removed');
 
       const [token1] = tokens;
-      assert.deepEqual(token1, { address: '0xb', symbol: 'B', decimals: 5 });
+      assert.deepEqual(token1, {
+        address: '0xb',
+        symbol: 'B',
+        decimals: 5,
+        isERC721: false,
+      });
     });
 
     it('should remove a token from its state on corresponding address', async function () {
@@ -310,7 +316,12 @@ describe('preferences controller', function () {
       assert.equal(tokensFirst.length, 1, 'one token removed in account');
 
       const [token1] = tokensFirst;
-      assert.deepEqual(token1, { address: '0xb', symbol: 'B', decimals: 5 });
+      assert.deepEqual(token1, {
+        address: '0xb',
+        symbol: 'B',
+        decimals: 5,
+        isERC721: false,
+      });
 
       await preferencesController.setSelectedAddress('0x7e57e3');
       const tokensSecond = preferencesController.getTokens();
@@ -335,7 +346,12 @@ describe('preferences controller', function () {
       assert.equal(tokensFirst.length, 1, 'one token removed in network');
 
       const [token1] = tokensFirst;
-      assert.deepEqual(token1, { address: '0xb', symbol: 'B', decimals: 5 });
+      assert.deepEqual(token1, {
+        address: '0xb',
+        symbol: 'B',
+        decimals: 5,
+        isERC721: false,
+      });
 
       switchToRinkeby();
       const tokensSecond = preferencesController.getTokens();

@@ -401,21 +401,8 @@ export default class PreferencesController {
       return token.address === address;
     });
     const previousIndex = tokens.indexOf(previousEntry);
-    const checksumAddress = toChecksumHexAddress(newEntry.address);
 
-    // add isERC721 flag:
-    let isERC721 = false;
-    // if this token is already in our contract metadata map we don't need
-    // to check against the contract
-    if (
-      contractsMap[checksumAddress] &&
-      contractsMap[checksumAddress].erc721 === true
-    ) {
-      isERC721 = true;
-    } else {
-      isERC721 = await this._detectIsERC721(newEntry.address);
-    }
-    newEntry.isERC721 = isERC721;
+    newEntry.isERC721 = await this._detectIsERC721(newEntry.address);
 
     if (previousEntry) {
       tokens[previousIndex] = newEntry;
@@ -425,6 +412,16 @@ export default class PreferencesController {
     assetImages[address] = image;
     this._updateAccountTokens(tokens, assetImages, updatedHiddenTokens);
     return Promise.resolve(tokens);
+  }
+
+  async updateTokenType(tokenAddress) {
+    const { tokens } = this.store.getState();
+    const previousIndex = tokens.findIndex((token) => {
+      return token.address === tokenAddress;
+    });
+    tokens[previousIndex].isERC721 = await this._detectIsERC721(tokenAddress);
+    this.store.updateState({ tokens });
+    return Promise.resolve(tokens[previousIndex]);
   }
 
   /**
@@ -790,23 +787,34 @@ export default class PreferencesController {
   }
 
   /**
-   * Detects whether a token is ERC-721.
+   * Detects whether or not a token is ERC-721 compatible.
    *
    * @param {string} tokensAddress - the token contract address.
    *
    */
   async _detectIsERC721(tokenAddress) {
-    const tokenContract = await new ethers.Contract(
-      tokenAddress,
-      abiERC721,
-      this.provider,
-    );
-    const isERC721 = await tokenContract
-      .supportsInterface(ERC721METADATA_INTERFACE_ID)
-      .catch((error) => {
-        log.debug(error);
-        return false;
-      });
+    const checksumAddress = toChecksumHexAddress(tokenAddress);
+    let isERC721;
+    // if this token is already in our contract metadata map we don't need
+    // to check against the contract
+    if (
+      contractsMap[checksumAddress] &&
+      contractsMap[checksumAddress].erc721 === true
+    ) {
+      isERC721 = Promise.resolve(true);
+    } else {
+      const tokenContract = await new ethers.Contract(
+        tokenAddress,
+        abiERC721,
+        this.provider,
+      );
+      isERC721 = await tokenContract
+        .supportsInterface(ERC721METADATA_INTERFACE_ID)
+        .catch((error) => {
+          log.debug(error);
+          return false;
+        });
+    }
     return isERC721;
   }
 

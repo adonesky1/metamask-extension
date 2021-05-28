@@ -6,7 +6,8 @@ import {
   getSendTokenAddress,
   getAssetImages,
 } from '../../../../selectors';
-import { updateSendToken } from '../../../../ducks/send/send.duck';
+import { updateSendToken, updateTokenType } from '../../../../store/actions';
+import { updateSendErrors } from '../../../../ducks/send/send.duck';
 import SendAssetRow from './send-asset-row.component';
 
 function mapStateToProps(state) {
@@ -24,6 +25,10 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     setSendToken: (token) => dispatch(updateSendToken(token)),
+    updateTokenType: (tokenAddress) => dispatch(updateTokenType(tokenAddress)),
+    updateSendErrors: (error) => {
+      dispatch(updateSendErrors(error));
+    },
   };
 }
 

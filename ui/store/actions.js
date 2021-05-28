@@ -1234,6 +1234,23 @@ export function addToken(
   };
 }
 
+export function updateTokenType(tokenAddress) {
+  return (dispatch) => {
+    dispatch(showLoadingIndication());
+    return new Promise((resolve, reject) => {
+      background.updateTokenType(tokenAddress, (err, tokens) => {
+        dispatch(hideLoadingIndication());
+        if (err) {
+          dispatch(displayWarning(err.message));
+          reject(err);
+          return;
+        }
+        resolve(tokens);
+      });
+    });
+  };
+}
+
 export function removeToken(address) {
   return (dispatch) => {
     dispatch(showLoadingIndication());

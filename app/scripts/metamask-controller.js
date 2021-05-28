@@ -728,6 +728,10 @@ export default class MetamaskController extends EventEmitter {
         preferencesController,
       ),
       addToken: nodeify(preferencesController.addToken, preferencesController),
+      updateTokenType: nodeify(
+        preferencesController.updateTokenType,
+        preferencesController,
+      ),
       removeToken: nodeify(
         preferencesController.removeToken,
         preferencesController,
