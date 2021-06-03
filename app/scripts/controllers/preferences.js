@@ -80,13 +80,18 @@ export default class PreferencesController {
     };
 
     this.network = opts.network;
-    const { type, rpcUrl } = this.network.getProviderConfig();
-    this.provider = ethers.getDefaultProvider(rpcUrl || type);
+    this.ethersProvider = new ethers.providers.Web3Provider(opts.provider);
     this.store = new ObservableStore(initState);
     this.store.setMaxListeners(12);
     this.openPopup = opts.openPopup;
     this.migrateAddressBookState = opts.migrateAddressBookState;
-    this._subscribeToNetworkDidChange();
+
+    this.network.on(NETWORK_EVENTS.NETWORK_DID_CHANGE, () => {
+      const { tokens, hiddenTokens } = this._getTokenRelatedStates();
+      this.ethersProvider = new ethers.providers.Web3Provider(opts.provider);
+      this._updateAccountTokens(tokens, this.getAssetImages(), hiddenTokens);
+    });
+
     this._subscribeToInfuraAvailability();
 
     global.setPreference = (key, value) => {
@@ -722,19 +727,6 @@ export default class PreferencesController {
   // PRIVATE METHODS
   //
 
-  /**
-   * Handle updating token list to reflect current network by listening for the
-   * NETWORK_DID_CHANGE event.
-   */
-  _subscribeToNetworkDidChange() {
-    this.network.on(NETWORK_EVENTS.NETWORK_DID_CHANGE, () => {
-      const { tokens, hiddenTokens } = this._getTokenRelatedStates();
-      const { type, rpcUrl } = this.network.getProviderConfig();
-      this.provider = ethers.getDefaultProvider(rpcUrl || type);
-      this._updateAccountTokens(tokens, this.getAssetImages(), hiddenTokens);
-    });
-  }
-
   _subscribeToInfuraAvailability() {
     this.network.on(NETWORK_EVENTS.INFURA_IS_BLOCKED, () => {
       this._setInfuraBlocked(true);
@@ -806,7 +798,7 @@ export default class PreferencesController {
       const tokenContract = await new ethers.Contract(
         tokenAddress,
         abiERC721,
-        this.provider,
+        this.ethersProvider,
       );
       isERC721 = await tokenContract
         .supportsInterface(ERC721METADATA_INTERFACE_ID)

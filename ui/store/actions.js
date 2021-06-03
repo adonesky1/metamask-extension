@@ -1235,19 +1235,17 @@ export function addToken(
 }
 
 export function updateTokenType(tokenAddress) {
-  return (dispatch) => {
+  return async (dispatch) => {
+    let token = {};
     dispatch(showLoadingIndication());
-    return new Promise((resolve, reject) => {
-      background.updateTokenType(tokenAddress, (err, tokens) => {
-        dispatch(hideLoadingIndication());
-        if (err) {
-          dispatch(displayWarning(err.message));
-          reject(err);
-          return;
-        }
-        resolve(tokens);
-      });
-    });
+    try {
+      token = await promisifiedBackground.updateTokenType(tokenAddress);
+    } catch (error) {
+      log.error(error);
+    } finally {
+      dispatch(hideLoadingIndication());
+    }
+    return token;
   };
 }
 

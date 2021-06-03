@@ -5,6 +5,7 @@ import {
   RINKEBY_CHAIN_ID,
 } from '../../../shared/constants/network';
 import PreferencesController from './preferences';
+import NetworkController from './network';
 
 describe('preferences controller', function () {
   let preferencesController;
@@ -13,20 +14,32 @@ describe('preferences controller', function () {
   let triggerNetworkChange;
   let switchToMainnet;
   let switchToRinkeby;
+  let provider;
   const migrateAddressBookState = sinon.stub();
 
   beforeEach(function () {
+    const sandbox = sinon.createSandbox();
     currentChainId = MAINNET_CHAIN_ID;
-    network = {
-      getCurrentChainId: () => currentChainId,
-      on: sinon.spy(),
-      getProviderConfig: () => ({ type: 'mainnet' }),
+    const networkControllerProviderConfig = {
+      getAccounts: () => undefined,
     };
+    network = new NetworkController();
+    network.setInfuraProjectId('foo');
+    network.initializeProvider(networkControllerProviderConfig);
+    provider = network.getProviderAndBlockTracker().provider;
+
+    sandbox.stub(network, 'getCurrentChainId').callsFake(() => currentChainId);
+    sandbox
+      .stub(network, 'getProviderConfig')
+      .callsFake(() => ({ type: 'mainnet' }));
+    const spy = sandbox.spy(network, 'on');
+
     preferencesController = new PreferencesController({
       migrateAddressBookState,
       network,
+      provider,
     });
-    triggerNetworkChange = network.on.firstCall.args[1];
+    triggerNetworkChange = spy.firstCall.args[1];
     switchToMainnet = () => {
       currentChainId = MAINNET_CHAIN_ID;
       triggerNetworkChange();

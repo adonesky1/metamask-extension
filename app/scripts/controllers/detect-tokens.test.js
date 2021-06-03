@@ -11,7 +11,7 @@ import PreferencesController from './preferences';
 
 describe('DetectTokensController', function () {
   const sandbox = sinon.createSandbox();
-  let keyringMemStore, network, preferences;
+  let keyringMemStore, network, preferences, provider;
 
   const noop = () => undefined;
 
@@ -23,7 +23,9 @@ describe('DetectTokensController', function () {
     keyringMemStore = new ObservableStore({ isUnlocked: false });
     network = new NetworkController();
     network.setInfuraProjectId('foo');
-    preferences = new PreferencesController({ network });
+    network.initializeProvider(networkControllerProviderConfig);
+    provider = network.getProviderAndBlockTracker().provider;
+    preferences = new PreferencesController({ network, provider });
     preferences.setAddresses([
       '0x7e57e2',
       '0xbc86727e770de68b1060c91f6bb6945c73e10388',
@@ -31,7 +33,6 @@ describe('DetectTokensController', function () {
     sandbox
       .stub(preferences, '_detectIsERC721')
       .returns(Promise.resolve(false));
-    network.initializeProvider(networkControllerProviderConfig);
   });
 
   after(function () {
