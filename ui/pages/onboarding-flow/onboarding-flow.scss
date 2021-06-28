@@ -1,31 +1,12 @@
+@import 'recovery-phrase/index';
 
 .onboarding-flow {
-
-    &__wrapper {
-        padding: 48px;
-        border: 1px solid $Grey-100;
-        border-radius: 10px;
-        // width: 400px;
-        // height: 500px;
-        align-self: center;
-        margin: 148px 0 120px 0;
-        max-width: 600px;
-    }
-
-    &__header {
-        // @include H2;
-        font-weight: bold;
-        margin-bottom: 24px;
-        color: black;
-      }
-
-      &__subheader {
-        // @include H4;
-        margin-bottom: 24px;
-        color: black;
-      }
-
-      &__tips {
-        list-style: circle;
-      }
+  &__wrapper {
+    padding: 42px;
+    border: 1px solid $Grey-100;
+    border-radius: 10px;
+    align-self: center;
+    margin: 148px 0 120px 0;
+    max-width: 600px;
+  }
 }
