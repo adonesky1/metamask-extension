@@ -1,0 +1,14 @@
+@import 'recovery-phrase/index';
+
+.onboarding-flow {
+  &__wrapper {
+    padding: 42px;
+    border: 1px solid $Grey-100;
+    border-radius: 10px;
+    align-self: center;
+    margin: 148px 0 120px 0;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+  }
+}

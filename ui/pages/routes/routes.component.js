@@ -5,6 +5,7 @@ import { matchPath, Route, Switch } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
 
 import FirstTimeFlow from '../first-time-flow';
+import OnboardingFlow from '../onboarding-flow/onboarding-flow';
 import SendTransactionScreen from '../send';
 import Swaps from '../swaps';
 import ConfirmTransaction from '../confirm-transaction';
@@ -122,7 +123,7 @@ export default class Routes extends Component {
     const routes = (
       <Switch>
         <Route path={LOCK_ROUTE} component={Lock} exact />
-        <Route path={INITIALIZE_ROUTE} component={FirstTimeFlow} />
+        {/* <Route path={INITIALIZE_ROUTE} component={FirstTimeFlow} /> */}
         <Initialized path={UNLOCK_ROUTE} component={UnlockPage} exact />
         <Initialized
           path={RESTORE_VAULT_ROUTE}
@@ -171,7 +172,7 @@ export default class Routes extends Component {
           component={PermissionsConnect}
         />
         <Authenticated path={`${ASSET_ROUTE}/:asset`} component={Asset} />
-        <Authenticated path={DEFAULT_ROUTE} component={Home} />
+        <Authenticated path={DEFAULT_ROUTE} component={OnboardingFlow} />
       </Switch>
     );
 
