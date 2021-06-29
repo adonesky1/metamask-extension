@@ -1,9 +1,9 @@
-import { history } from 'globalthis/implementation';
-import React, { useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useHistory } from 'react-router';
 import Box from '../../../components/ui/box';
 import Button from '../../../components/ui/button';
 import Typography from '../../../components/ui/typography';
+import { debounce } from 'lodash';
 import {
   TEXT_ALIGN,
   TYPOGRAPHY,
@@ -11,15 +11,33 @@ import {
   FONT_WEIGHT,
 } from '../../../helpers/constants/design-system';
 import RecoveryPhraseChips from './recovery-phrase-chips';
-// import { useCopyToClipboard } from '../../../hooks/useCopyToClipboard';
-// import Copy from '../../../components/ui/icon/copy-icon.component';
-// import { useI18nContext } from '../../../hooks/useI18nContext';
 
-const ConfirmRecoveryPhrase = ({ seedPhrase }) => {
-  // const history = useHistory();
-  // const t = useI18nContext();
-  // const [copied, handleCopy] = useCopyToClipboard();
-  // const [seedPhraseRevealed, setSeedPhraseRevealed] = useState(false);
+const ConfirmRecoveryPhrase = ({ seedPhrase = '' }) => {
+  const splitSeedPhrase = seedPhrase.split(' ');
+  const indicesToCheck = [2, 3, 7];
+  const [phraseElements, setPhraseElements] = useState({
+    ...splitSeedPhrase,
+    [indicesToCheck[0]]: '',
+    [indicesToCheck[1]]: '',
+    [indicesToCheck[2]]: '',
+  });
+  const [matching, setMatching] = useState(false);
+
+  const validateRecoveryPhrase = (phrase) => {
+    setMatching(Object.values(phrase).join(' ') === seedPhrase);
+  };
+  const debounceValidate = useMemo(
+    () =>
+      debounce(() => {
+        validateRecoveryPhrase(phraseElements);
+      }, 500),
+    [phraseElements],
+  );
+
+  useEffect(() => {
+    debounceValidate();
+  }, [phraseElements, seedPhrase]);
+
   return (
     <div>
       <Box
@@ -40,7 +58,13 @@ const ConfirmRecoveryPhrase = ({ seedPhrase }) => {
           Enter the missing words to confirm your Secret Recovery Phrase.
         </Typography>
       </Box>
-      <RecoveryPhraseChips seedPhrase={seedPhrase} confirmPhase />
+      <RecoveryPhraseChips
+        seedPhrase={splitSeedPhrase}
+        confirmPhase
+        setInputValue={setPhraseElements}
+        inputValue={phraseElements}
+        indicesToCheck={indicesToCheck}
+      />
       <div className="recovery-phrase__footer">
         <Button
           rounded
@@ -49,6 +73,7 @@ const ConfirmRecoveryPhrase = ({ seedPhrase }) => {
           // onClick={() => {
           //   history.push();
           // }}
+          disabled={!matching}
         >
           Confirm
         </Button>

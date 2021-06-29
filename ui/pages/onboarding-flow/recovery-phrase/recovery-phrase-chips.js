@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import Chip from '../../../components/ui/chip';
-import { ChipWithInput } from '../../../components/ui/chip/chip-with-input'
+import { ChipWithInput } from '../../../components/ui/chip/chip-with-input';
 import Box from '../../../components/ui/box';
 import Typography from '../../../components/ui/typography';
 import {
@@ -16,9 +16,10 @@ const RecoveryPhraseChips = ({
   seedPhrase,
   seedPhraseRevealed,
   confirmPhase,
+  setInputValue,
+  inputValue,
+  indicesToCheck,
 }) => {
-  const [inputValue, setInputValue] = useState('');
-  const seedPhraseSplit = seedPhrase.split(' ');
   const hideSeedPhrase =
     seedPhraseRevealed !== undefined && !seedPhraseRevealed;
   return (
@@ -29,27 +30,28 @@ const RecoveryPhraseChips = ({
       borderWidth={1}
       borderRadius={SIZES.MD}
       display={DISPLAY.GRID}
-      className="recovery-phrase__secret"
       marginBottom={4}
+      className="recovery-phrase__secret"
     >
       <div
         className={classnames('recovery-phrase__chips', {
           'recovery-phrase__chips--hidden': hideSeedPhrase,
         })}
       >
-        {seedPhraseSplit.map((word, index) => {
-          index++
-          if (confirmPhase && [3, 4, 8].includes(index)) {
+        {seedPhrase.map((word, index) => {
+          if (confirmPhase && indicesToCheck && indicesToCheck.includes(index)) {
             return (
               <div className="recovery-phrase__chip-item">
                 <div className="recovery-phrase__chip-item__number">
-                  {`${index}.`}
+                  {`${index + 1}.`}
                 </div>
                 <ChipWithInput
                   className="recovery-phrase__chip--with-input"
                   borderColor={COLORS.UI3}
-                  inputValue={inputValue}
-                  setInputValue={setInputValue}
+                  inputValue={inputValue[index]}
+                  setInputValue={(value) => {
+                    setInputValue({ ...inputValue, [index]: value });
+                  }}
                   borderColor={COLORS.PRIMARY1}
                 />
               </div>
@@ -58,7 +60,7 @@ const RecoveryPhraseChips = ({
             return (
               <div className="recovery-phrase__chip-item">
                 <div className="recovery-phrase__chip-item__number">
-                  {`${index}.`}
+                  {`${index + 1}.`}
                 </div>
                 <Chip
                   className="recovery-phrase__chip"
@@ -74,7 +76,7 @@ const RecoveryPhraseChips = ({
 
       {hideSeedPhrase && (
         <div className="recovery-phrase__secret-blocker">
-          <i className="far fa-eye-slash" color='white'/>
+          <i className="far fa-eye-slash" color="white" />
           <Typography
             variant={TYPOGRAPHY.H6}
             color={COLORS.WHITE}

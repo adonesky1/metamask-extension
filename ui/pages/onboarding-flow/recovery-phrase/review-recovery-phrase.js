@@ -75,7 +75,7 @@ const RecoveryPhrase = ({ seedPhrase }) => {
         </ul>
       </Box>
       <RecoveryPhraseChips
-        seedPhrase={seedPhrase}
+        seedPhrase={seedPhrase.split(' ')}
         seedPhraseRevealed={seedPhraseRevealed}
       />
       <div className="recovery-phrase__footer">
