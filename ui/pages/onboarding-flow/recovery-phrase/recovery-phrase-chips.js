@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import Chip from '../../../components/ui/chip';
+import { ChipWithInput } from '../../../components/ui/chip/chip-with-input'
 import Box from '../../../components/ui/box';
 import Typography from '../../../components/ui/typography';
 import {
-  TEXT_ALIGN,
   TYPOGRAPHY,
-  JUSTIFY_CONTENT,
-  FONT_WEIGHT,
   COLORS,
   BORDER_STYLE,
   SIZES,
@@ -40,17 +38,19 @@ const RecoveryPhraseChips = ({
         })}
       >
         {seedPhraseSplit.map((word, index) => {
-          if (confirmPhase && [2, 3, 7].includes(index)) {
+          index++
+          if (confirmPhase && [3, 4, 8].includes(index)) {
             return (
               <div className="recovery-phrase__chip-item">
                 <div className="recovery-phrase__chip-item__number">
-                  {`${index++}.`}
+                  {`${index}.`}
                 </div>
-                <Chip
-                  className="recovery-phrase__chip"
+                <ChipWithInput
+                  className="recovery-phrase__chip--with-input"
                   borderColor={COLORS.UI3}
                   inputValue={inputValue}
                   setInputValue={setInputValue}
+                  borderColor={COLORS.PRIMARY1}
                 />
               </div>
             );
@@ -58,7 +58,7 @@ const RecoveryPhraseChips = ({
             return (
               <div className="recovery-phrase__chip-item">
                 <div className="recovery-phrase__chip-item__number">
-                  {`${index++}.`}
+                  {`${index}.`}
                 </div>
                 <Chip
                   className="recovery-phrase__chip"
@@ -74,11 +74,11 @@ const RecoveryPhraseChips = ({
 
       {hideSeedPhrase && (
         <div className="recovery-phrase__secret-blocker">
-          {/* <LockIcon width="28px" height="35px" fill="#FFFFFF" /> */}
+          <i className="far fa-eye-slash" color='white'/>
           <Typography
             variant={TYPOGRAPHY.H6}
             color={COLORS.WHITE}
-            className="recovery-phrase__reveal-button"
+            className="recovery-phrase__secret-blocker--text"
           >
             Make sure no one is watching your screen
           </Typography>
