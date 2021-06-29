@@ -4,18 +4,22 @@ import { useHistory } from 'react-router';
 import Box from '../../../components/ui/box';
 import Button from '../../../components/ui/button';
 import Typography from '../../../components/ui/typography';
+import { INITIALIZE_CONFIRM_SEED_PHRASE_ROUTE } from '../../../helpers/constants/routes';
 import {
   TEXT_ALIGN,
   TYPOGRAPHY,
   JUSTIFY_CONTENT,
   FONT_WEIGHT,
-  BLOCK_SIZES,
-  ALIGN_ITEMS,
 } from '../../../helpers/constants/design-system';
 import RecoveryPhraseChips from './recovery-phrase-chips';
+import { useCopyToClipboard } from '../../../hooks/useCopyToClipboard';
+import Copy from '../../../components/ui/icon/copy-icon.component';
+import { useI18nContext } from '../../../hooks/useI18nContext';
 
-const RecoveryPhraseReveal = ({ seedPhrase }) => {
+const RecoveryPhrase = ({ seedPhrase }) => {
   const history = useHistory();
+  const t = useI18nContext();
+  const [copied, handleCopy] = useCopyToClipboard();
   const [seedPhraseRevealed, setSeedPhraseRevealed] = useState(false);
   return (
     <div>
@@ -74,36 +78,44 @@ const RecoveryPhraseReveal = ({ seedPhrase }) => {
         seedPhrase={seedPhrase}
         seedPhraseRevealed={seedPhraseRevealed}
       />
-      <Box
-        width={BLOCK_SIZES.HALF}
-        justifyContent={JUSTIFY_CONTENT.CENTER}
-        alignItems={ALIGN_ITEMS.CENTER}
-        marginTop={4}
-      >
-        {seedPhraseRevealed ? (
-          <Button
-            rounded
-            type="primary"
-            // onClick={() => {
-            //   history.push();
-            // }}
-          >
-            Next
-          </Button>
-        ) : (
-          <Button
-            rounded
-            type="primary"
-            onClick={() => {
-              setSeedPhraseRevealed(true);
-            }}
-          >
-            Reveal Recovery Phrase
-          </Button>
-        )}
-      </Box>
+      <div className="recovery-phrase__footer">
+          {seedPhraseRevealed ? (
+            <div className="recovery-phrase__footer--copy">
+                <Button
+                  onClick={() => {
+                    handleCopy(seedPhrase);
+                  }}
+                  icon={copied ? null : <Copy size={20} color="#3098DC" />}
+                  className="recovery-phrase__footer--copy--button"
+                >
+                  {copied ? t('copiedExclamation') : t('copyToClipboard')}
+                </Button>
+              <Button
+                rounded
+                type="primary"
+                className='recovery-phrase__footer--button'
+                onClick={() => {
+                  history.push(INITIALIZE_CONFIRM_SEED_PHRASE_ROUTE);
+                }}
+              >
+                Next
+              </Button>
+            </div>
+          ) : (
+            <Button
+              rounded
+              type="primary"
+              className='recovery-phrase__footer--button'
+              onClick={() => {
+                setSeedPhraseRevealed(true);
+              }}
+            >
+              Reveal Recovery Phrase
+            </Button>
+          )}
+      </div>
     </div>
   );
 };
 
-export default RecoveryPhraseReveal;
+export default RecoveryPhrase;

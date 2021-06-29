@@ -9,6 +9,7 @@
     }
 
     &__chips {
+        display: grid;
         grid-template-columns: 160px 160px 160px;
         justify-items: center;
         align-items: center;
@@ -17,6 +18,10 @@
         &--hidden {
           filter: blur(5px);
         }
+    }
+
+    &__secret{
+        position: relative;
     }
 
     &__secret-blocker {
@@ -31,6 +36,7 @@
         align-items: center;
         justify-content: center;
         padding: 8px 0 18px;
+        border-radius: 4px;
       }
 
     &__chip-item {
@@ -40,6 +46,45 @@
         text-align: center;
         &__number {
             font-size: 14px;
+        }
+    }
+
+    &__footer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        &--button {
+            width: 50%;
+            padding: 20px;
+        }
+
+        &--copy {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            &--button {
+                background-color: transparent;
+                border: none;
+                display: flex;
+                justify-content: space-evenly;
+                width: 40%;
+                color: $primary-blue;
+                cursor: pointer;
+                margin-bottom: 24px;
+
+                &:active {
+                    color: $black;
+                    background-color: transparent;
+                    border: none;
+                    transform: scale(0.97);
+                }
+            }
+
         }
     }
 

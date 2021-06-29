@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
+import classnames from 'classnames';
 import Chip from '../../../components/ui/chip';
 import Box from '../../../components/ui/box';
+import Typography from '../../../components/ui/typography';
 import {
   TEXT_ALIGN,
   TYPOGRAPHY,
@@ -11,11 +13,16 @@ import {
   SIZES,
   DISPLAY,
 } from '../../../helpers/constants/design-system';
-import classnames from 'classnames';
 
-const RecoveryPhraseChips = ({ seedPhrase, seedPhraseRevealed }) => {
+const RecoveryPhraseChips = ({
+  seedPhrase,
+  seedPhraseRevealed,
+  confirmPhase,
+}) => {
+  const [inputValue, setInputValue] = useState('');
   const seedPhraseSplit = seedPhrase.split(' ');
-  let count = 0;
+  const hideSeedPhrase =
+    seedPhraseRevealed !== undefined && !seedPhraseRevealed;
   return (
     <Box
       borderColor={COLORS.UI2}
@@ -24,35 +31,59 @@ const RecoveryPhraseChips = ({ seedPhrase, seedPhraseRevealed }) => {
       borderWidth={1}
       borderRadius={SIZES.MD}
       display={DISPLAY.GRID}
-      className={classnames("recovery-phrase__chips", {
-        'recovery-phrase__chips--hidden': !seedPhraseRevealed,
-      } )}
+      className="recovery-phrase__secret"
       marginBottom={4}
     >
-      {seedPhraseSplit.map((word) => {
-        count++;
-        return (
-          <div className="recovery-phrase__chip-item">
-            <div className="recovery-phrase__chip-item__number">
-                {`${count}.`}
-            </div>
-            <Chip className={'recovery-phrase__chip'} borderColor={COLORS.UI3}>
-              {word}
-            </Chip>
-          </div>
-        );
-      })}
+      <div
+        className={classnames('recovery-phrase__chips', {
+          'recovery-phrase__chips--hidden': hideSeedPhrase,
+        })}
+      >
+        {seedPhraseSplit.map((word, index) => {
+          if (confirmPhase && [2, 3, 7].includes(index)) {
+            return (
+              <div className="recovery-phrase__chip-item">
+                <div className="recovery-phrase__chip-item__number">
+                  {`${index++}.`}
+                </div>
+                <Chip
+                  className="recovery-phrase__chip"
+                  borderColor={COLORS.UI3}
+                  inputValue={inputValue}
+                  setInputValue={setInputValue}
+                />
+              </div>
+            );
+          } else {
+            return (
+              <div className="recovery-phrase__chip-item">
+                <div className="recovery-phrase__chip-item__number">
+                  {`${index++}.`}
+                </div>
+                <Chip
+                  className="recovery-phrase__chip"
+                  borderColor={COLORS.UI3}
+                >
+                  {word}
+                </Chip>
+              </div>
+            );
+          }
+        })}
+      </div>
 
-      {!seedPhraseRevealed && (
-          <div
-            className="recovery-phrase__secret-blocker"
+      {hideSeedPhrase && (
+        <div className="recovery-phrase__secret-blocker">
+          {/* <LockIcon width="28px" height="35px" fill="#FFFFFF" /> */}
+          <Typography
+            variant={TYPOGRAPHY.H6}
+            color={COLORS.WHITE}
+            className="recovery-phrase__reveal-button"
           >
-            {/* <LockIcon width="28px" height="35px" fill="#FFFFFF" /> */}
-            {/* <div className="reveal-seed-phrase__reveal-button">
-              {t('clickToRevealSeed')}
-            </div> */}
-          </div>
-        )}
+            Make sure no one is watching your screen
+          </Typography>
+        </div>
+      )}
     </Box>
   );
 };
