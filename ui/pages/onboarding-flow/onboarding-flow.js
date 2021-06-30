@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Switch, Route, useHistory } from 'react-router-dom';
 import {
   INITIALIZE_SEED_PHRASE_ROUTE,
@@ -7,27 +7,29 @@ import {
 } from '../../helpers/constants/routes';
 import ReviewRecoveryPhrase from './recovery-phrase/review-recovery-phrase';
 import ConfirmRecoveryPhrase from './recovery-phrase/confirm-recovery-phrase';
-import ProgressBar from '../../components/app/step-progress-bar'
+import ProgressBar from '../../components/app/step-progress-bar';
+import NewAccount from './new-account/new-account';
 
+const OnboardingFlow = ({ createNewAccount }) => {
+  const [seedPhrase, setSeedPhrase] = useState('');
 
-const OnboardingFlow = () => {
   const history = useHistory();
   useEffect(() => {
-    history.push(INITIALIZE_SEED_PHRASE_ROUTE);
+    history.push(INITIALIZE_CREATE_PASSWORD_ROUTE);
   }, []);
 
-  const seedPhrase =
-    'ship agree price proud mango harbor document stage raise kitten initial invest';
+  // setSeedPhrase(
+  //   'ship agree price proud mango harbor document stage raise kitten initial invest',
+  // );
 
-   const handleCreateNewAccount = async (password) => {
-      const { createNewAccount } = this.props;
-      try {
-        const seedPhrase = await createNewAccount(password);
-        this.setState({ seedPhrase });
-      } catch (error) {
-        throw new Error(error.message);
-      }
-    };
+  //  const handleCreateNewAccount = async (password) => {
+  //     try {
+  //       const seedPhrase = await createNewAccount(password);
+  //       this.setState({ seedPhrase });
+  //     } catch (error) {
+  //       throw new Error(error.message);
+  //     }
+  //   };
 
   return (
     <div className="onboarding-flow__wrapper">
@@ -59,9 +61,9 @@ const OnboardingFlow = () => {
           exact
           path={INITIALIZE_CREATE_PASSWORD_ROUTE}
           render={(routeProps) => (
-            <ConfirmRecoveryPhrase
+            <NewAccount
               {...routeProps}
-              seedPhrase={seedPhrase}
+              // seedPhrase={seedPhrase}
               //   verifySeedPhrase={verifySeedPhrase}
             />
           )}
