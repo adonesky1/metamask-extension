@@ -13,6 +13,7 @@ import {
 import RecoveryPhraseChips from './recovery-phrase-chips';
 
 const ConfirmRecoveryPhrase = ({ seedPhrase = '' }) => {
+  const history = useHistory();
   const splitSeedPhrase = seedPhrase.split(' ');
   const indicesToCheck = [2, 3, 7];
   const [phraseElements, setPhraseElements] = useState({

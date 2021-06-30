@@ -161,7 +161,7 @@ export default class FirstTimeFlow extends PureComponent {
             path={INITIALIZE_END_OF_FLOW_ROUTE}
             component={EndOfFlow}
           />
-          <Route exact path={INITIALIZE_WELCOME_ROUTE} component={Welcome} />
+          {/* <Route exact path={INITIALIZE_WELCOME_ROUTE} component={Welcome} /> */}
           <Route
             exact
             path={INITIALIZE_METAMETRICS_OPT_IN_ROUTE}
