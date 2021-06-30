@@ -7,7 +7,7 @@ import {
 } from '../../helpers/constants/routes';
 import ReviewRecoveryPhrase from './recovery-phrase/review-recovery-phrase';
 import ConfirmRecoveryPhrase from './recovery-phrase/confirm-recovery-phrase';
-import ProgressBar from '../../components/app/step-progress-indicator'
+import ProgressBar from '../../components/app/step-progress-bar'
 
 
 const OnboardingFlow = () => {
@@ -21,7 +21,6 @@ const OnboardingFlow = () => {
 
    const handleCreateNewAccount = async (password) => {
       const { createNewAccount } = this.props;
-  
       try {
         const seedPhrase = await createNewAccount(password);
         this.setState({ seedPhrase });

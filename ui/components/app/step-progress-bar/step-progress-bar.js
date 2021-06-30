@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 
-export default function ProgressBar({ stage = 0 }) {
+export default function StepProgressBar({ stage = 0 }) {
   return (
     <div className="container">
       <ul className="progressbar">
