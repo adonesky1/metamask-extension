@@ -1,0 +1,19 @@
+.new-account {
+  &__wrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  &__form {
+    &__create-password-input {
+      position: relative;
+
+      &__show-button {
+        position: absolute;
+        left: 85%;
+        top: 15%;
+      }
+    }
+  }
+}

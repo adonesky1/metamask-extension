@@ -8,11 +8,12 @@ import {
   COLORS,
 } from '../../../helpers/constants/design-system';
 import AdvancedGasControlsRow from './advanced-gas-controls-row.component';
+import FormField from '../../ui/form-field';
 
 export default function AdvancedGasControls() {
   const t = useContext(I18nContext);
 
-  const [gasLimit, setGasLimit] = useState(0);
+  const [gasLimit, setGasLimit] = useState('');
   const [maxPriorityFee, setMaxPriorityFee] = useState(0);
   const [maxFee, setMaxFee] = useState(0);
 
@@ -21,22 +22,23 @@ export default function AdvancedGasControls() {
 
   return (
     <div className="advanced-gas-controls">
-      <AdvancedGasControlsRow
+      <FormField
         titleText={t('gasLimit')}
         onChange={setGasLimit}
         tooltipText=""
-        titleDetailText=""
+        titleDetail={<button>test</button>}
         value={gasLimit}
       />
-      {process.env.SHOW_EIP_1559_UI ? (
+      {true ? (
         <>
-          <AdvancedGasControlsRow
+          <FormField
             titleText={t('maxPriorityFee')}
             titleUnit="(GWEI)"
             tooltipText=""
+            numeric
             onChange={setMaxPriorityFee}
             value={maxPriorityFee}
-            titleDetailText={
+            titleDetail={
               <>
                 <Typography
                   tag="span"
