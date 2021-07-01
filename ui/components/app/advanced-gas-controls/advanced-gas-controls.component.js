@@ -7,12 +7,12 @@ import {
   TYPOGRAPHY,
   COLORS,
 } from '../../../helpers/constants/design-system';
-import AdvancedGasControlsRow from './advanced-gas-controls-row.component';
+import FormField from '../../ui/form-field';
 
 export default function AdvancedGasControls() {
   const t = useContext(I18nContext);
 
-  const [gasLimit, setGasLimit] = useState(0);
+  const [gasLimit, setGasLimit] = useState('');
   const [maxPriorityFee, setMaxPriorityFee] = useState(0);
   const [maxFee, setMaxFee] = useState(0);
 
@@ -21,22 +21,23 @@ export default function AdvancedGasControls() {
 
   return (
     <div className="advanced-gas-controls">
-      <AdvancedGasControlsRow
+      <FormField
         titleText={t('gasLimit')}
         onChange={setGasLimit}
         tooltipText=""
-        titleDetailText=""
         value={gasLimit}
+        numeric
       />
-      {process.env.SHOW_EIP_1559_UI ? (
+      {true ? (
         <>
-          <AdvancedGasControlsRow
+          <FormField
             titleText={t('maxPriorityFee')}
             titleUnit="(GWEI)"
             tooltipText=""
             onChange={setMaxPriorityFee}
             value={maxPriorityFee}
-            titleDetailText={
+            numeric
+            titleDetail={
               <>
                 <Typography
                   tag="span"
@@ -54,13 +55,13 @@ export default function AdvancedGasControls() {
               </>
             }
           />
-          <AdvancedGasControlsRow
+          <FormField
             titleText={t('maxFee')}
             titleUnit="(GWEI)"
             tooltipText=""
             onChange={setMaxFee}
             value={maxFee}
-            titleDetailText={
+            titleDetail={
               <>
                 <Typography
                   tag="span"
@@ -81,12 +82,11 @@ export default function AdvancedGasControls() {
         </>
       ) : (
         <>
-          <AdvancedGasControlsRow
+          <FormField
             titleText={t('gasPrice')}
             titleUnit="(GWEI)"
             onChange={setGasPrice}
             tooltipText=""
-            titleDetailText=""
             value={gasPrice}
           />
         </>

@@ -474,6 +474,9 @@
   "createAccount": {
     "message": "Create Account"
   },
+  "createNewWallet": {
+    "message": "Create a new wallet"
+  },
   "createPassword": {
     "message": "Create Password"
   },
@@ -1467,6 +1470,9 @@
   },
   "passwordNotLongEnough": {
     "message": "Password not long enough"
+  },
+  "passwordTermsWarning": {
+    "message": "I understand that MetaMask cannot recover this password for me. $1"
   },
   "passwordsDontMatch": {
     "message": "Passwords Don't Match"
